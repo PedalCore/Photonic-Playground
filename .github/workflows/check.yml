@@ -1,0 +1,70 @@
+name: Godot checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Godot 4.4.1
+        run: |
+          curl --fail --location --retry 3 --silent --show-error \
+            https://github.com/godotengine/godot-builds/releases/download/4.4.1-stable/Godot_v4.4.1-stable_linux.x86_64.zip \
+            -o "$RUNNER_TEMP/godot.zip"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          chmod +x "$RUNNER_TEMP/godot/Godot_v4.4.1-stable_linux.x86_64"
+          echo "$RUNNER_TEMP/godot" >> "$GITHUB_PATH"
+      - name: Import and check scripts
+        run: |
+          set -o pipefail
+          Godot_v4.4.1-stable_linux.x86_64 --headless --path . --editor --import 2>&1 | tee import.log
+          ! grep -E 'SCRIPT ERROR|ERROR:' import.log
+      - name: Numerical and persistence checks
+        run: Godot_v4.4.1-stable_linux.x86_64 --headless --path . --script tests/test_solver.gd
+      - name: Pulse models and readout checks
+        run: Godot_v4.4.1-stable_linux.x86_64 --headless --path . --script tests/test_pulse.gd
+      - name: Pulse lab smoke test
+        run: |
+          set -o pipefail
+          timeout 90s Godot_v4.4.1-stable_linux.x86_64 --headless --path . -- --pulse-smoke 2>&1 | tee pulse-smoke.log
+          grep -q 'PULSE UI SMOKE PASS' pulse-smoke.log
+          ! grep -E 'SCRIPT ERROR|ERROR:' pulse-smoke.log
+      - name: Native scene smoke test
+        run: |
+          set -o pipefail
+          timeout 90s Godot_v4.4.1-stable_linux.x86_64 --headless --path . -- --smoke 2>&1 | tee smoke.log
+          grep -q 'SMOKE PASS' smoke.log
+          ! grep -E 'SCRIPT ERROR|ERROR:' smoke.log
+      - name: Render the native scene
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: |
+          set -o pipefail
+          timeout 150s xvfb-run -a Godot_v4.4.1-stable_linux.x86_64 --path . --audio-driver Dummy -- --capture --preset=2 2>&1 | tee render.log
+          ! grep -E 'SCRIPT ERROR|ERROR:' render.log
+          mkdir -p preview
+          cp "$HOME/.local/share/godot/app_userdata/Photonic Playground/preview.png" preview/prism-study.png
+      - name: Render pulse lab
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: |
+          set -o pipefail
+          timeout 150s xvfb-run -a Godot_v4.4.1-stable_linux.x86_64 --path . --audio-driver Dummy -- --pulse-capture --preview-log 2>&1 | tee pulse-render.log
+          grep -q 'PULSE CAPTURE PASS' pulse-render.log
+          ! grep -E 'SCRIPT ERROR|ERROR:' pulse-render.log
+          cp "$HOME/.local/share/godot/app_userdata/Photonic Playground/pulse-preview.png" preview/pulse-lab.png
+      - uses: actions/upload-artifact@v4
+        continue-on-error: true
+        with:
+          name: native-godot-preview
+          path: preview/
+          retention-days: 1

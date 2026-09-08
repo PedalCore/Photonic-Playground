@@ -1,0 +1,23 @@
+; Open this file with Godot 4.4 or newer, then press F6/F5.
+config_version=5
+
+[application]
+config/name="Photonic Playground"
+run/main_scene="res://scenes/main.tscn"
+config/features=PackedStringArray("4.4", "GL Compatibility")
+config/icon="res://icon.svg"
+
+[display]
+window/size/viewport_width=1440
+window/size/viewport_height=940
+window/size/window_width_override=1440
+window/size/window_height_override=940
+window/size/min_width=1100
+window/size/min_height=760
+window/stretch/mode="canvas_items"
+
+[rendering]
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+textures/default_filters/use_nearest_mipmap_filter=false
+environment/defaults/default_clear_color=Color(0.035, 0.051, 0.071, 1)
