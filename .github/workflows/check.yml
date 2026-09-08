@@ -26,10 +26,18 @@ jobs:
       - name: Import and check scripts
         run: |
           set -o pipefail
-          Godot_v4.4.1-stable_linux.x86_64 --headless --path . --editor --quit 2>&1 | tee import.log
-          ! grep -E 'SCRIPT ERROR|Parse Error|Compile Error' import.log
+          Godot_v4.4.1-stable_linux.x86_64 --headless --path . --editor --import 2>&1 | tee import.log
+          ! grep -E 'SCRIPT ERROR|ERROR:' import.log
       - name: Numerical and persistence checks
         run: Godot_v4.4.1-stable_linux.x86_64 --headless --path . --script tests/test_solver.gd
+      - name: Pulse models and readout checks
+        run: Godot_v4.4.1-stable_linux.x86_64 --headless --path . --script tests/test_pulse.gd
+      - name: Pulse lab smoke test
+        run: |
+          set -o pipefail
+          timeout 90s Godot_v4.4.1-stable_linux.x86_64 --headless --path . -- --pulse-smoke 2>&1 | tee pulse-smoke.log
+          grep -q 'PULSE UI SMOKE PASS' pulse-smoke.log
+          ! grep -E 'SCRIPT ERROR|ERROR:' pulse-smoke.log
       - name: Native scene smoke test
         run: |
           set -o pipefail
@@ -45,6 +53,15 @@ jobs:
           ! grep -E 'SCRIPT ERROR|ERROR:' render.log
           mkdir -p preview
           cp "$HOME/.local/share/godot/app_userdata/Photonic Playground/preview.png" preview/prism-study.png
+      - name: Render pulse lab
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: |
+          set -o pipefail
+          timeout 150s xvfb-run -a Godot_v4.4.1-stable_linux.x86_64 --path . --audio-driver Dummy -- --pulse-capture --preview-log 2>&1 | tee pulse-render.log
+          grep -q 'PULSE CAPTURE PASS' pulse-render.log
+          ! grep -E 'SCRIPT ERROR|ERROR:' pulse-render.log
+          cp "$HOME/.local/share/godot/app_userdata/Photonic Playground/pulse-preview.png" preview/pulse-lab.png
       - uses: actions/upload-artifact@v4
         continue-on-error: true
         with:

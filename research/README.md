@@ -2,7 +2,11 @@
 
 The first two experiments work with the **same Godot wave solver as the table**.
 They turn a visual sandbox into a small, reproducible computation benchmark.
-These are command-line experiments; the editor UI does not yet train a readout.
+These first experiments run from the command line. The newer
+[Pulse lab experiments](pulse_experiments.md) add native Godot controls, fitting,
+replay and export for pulse timing and an eight-mode cavity with threshold nodes.
+That lab uses a separate reduced model; the matrix and delayed-XOR results below
+continue to use the editable table's scalar wave solver.
 
 ## What happened
 

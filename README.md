@@ -30,6 +30,15 @@ Compatibility renderer. The first import generates Godot's normal local cache.
 The fun to test first: can an unexpected pattern make you want to change one more
 thing? These five experiments are editable starting points, not locked levels.
 
+**Pulse lab** opens three computation experiments inside Godot: a pulse-driven
+resonator versus a leaky neuron, recognition of pulse interval order, and timing
+XOR. Replay the cavity field, probe powers and emitted spikes; tune decay,
+thresholds and feedback; then **Run comparison** to train ten readouts on separate
+training/validation/test examples. No Python is needed. Start by changing the
+single-neuron pulse gap from **0.5 to 1.0** and watching the resonator fire.
+See [the pulse experiments](research/pulse_experiments.md) for controls, measured
+results and the reduced model's limits.
+
 ## Controls
 
 | Action | Control |
@@ -88,7 +97,9 @@ propagation speed; a simple band-dependent index produces dispersion.
 This is an exploratory game model, **not a Maxwell solver or a validated photonic
 device design tool**. There is no polarization, calibrated Fresnel response,
 continuous spectrum, nonlinear material, or quantum state. The table UI does
-not yet train a reservoir readout. Grid dispersion and staircase boundaries are visible approximations.
+not itself train a reservoir readout; **Pulse lab** trains readouts on a separate
+eight-mode cavity model with optoelectronic threshold nodes and optional powered
+pulse feedback. Grid dispersion and staircase boundaries are visible approximations.
 Mirrors impose a zero-field boundary (with a phase inversion). A grating here is
 an array of reflective bars and openings, rather than a physical ruled glass optic.
 
@@ -105,7 +116,11 @@ results, not hardware performance claims.
 
 The experiments include separate train/validation/test streams, direct native
 checks, controls and a reproducible results figure. They run from the command
-line with Godot plus Python; readout training is not yet exposed in the table UI.
+line with Godot plus Python. The newer Pulse lab runs its own experiments and
+readout training entirely inside Godot. Its first results show that pulse-order
+recognition is easy for most memory readouts; timing XOR is harder, and the
+explicit digital product control wins. These findings do not establish an
+advantage for waves or continuous-state readouts over spikes.
 
 ## Performance
 
@@ -121,6 +136,8 @@ this first solver. A GPU solver is a possible next iteration after playtesting.
 godot --headless --path . --editor --quit
 godot --headless --path . --script tests/test_solver.gd
 godot --headless --path . -- --smoke
+godot --headless --path . --script tests/test_pulse.gd
+godot --headless --path . -- --pulse-smoke
 ```
 
 The physics checks cover propagation, coherent addition/cancellation, blocked
@@ -134,6 +151,9 @@ duplicate/delete, undo/redo, save/load and measurement export.
 | `scripts/experiments.gd` | Components and starting constructions |
 | `scripts/optical_table.gd` | Editing, field textures, drawing, measurements and persistence |
 | `scripts/main.gd` | Native Godot interface |
+| `scripts/pulse_lab.gd` | Interactive timing, cavity and readout experiments |
+| `scripts/pulse_model.gd` | Reduced modal field and threshold/reset nodes |
+| `scripts/pulse_study.gd` / `pulse_readout.gd` | Split datasets, controls and native ridge regression |
 | `shaders/wave_display.gdshader` | False-colour field display |
 
 The concept renders that inspired this project were visual studies. This repository

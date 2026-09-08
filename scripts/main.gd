@@ -27,6 +27,7 @@ var readout_bars: Array[ProgressBar] = []
 var confirmation: ConfirmationDialog
 var pending_action: Callable
 var status_until: float = 0.0
+var pulse_lab: Control
 
 func _ready() -> void:
 	_build_theme()
@@ -43,6 +44,35 @@ func _ready() -> void:
 	_selection_changed()
 	_layout_changed()
 	_choose_preset(0)
+	if "--pulse-lab" in OS.get_cmdline_user_args() or "--pulse-smoke" in OS.get_cmdline_user_args() or "--pulse-capture" in OS.get_cmdline_user_args():
+		_open_pulse_lab()
+	if "--pulse-smoke" in OS.get_cmdline_user_args():
+		await pulse_lab.smoke()
+		pulse_lab.closed.emit()
+		await get_tree().process_frame
+		assert(not is_instance_valid(pulse_lab) and table.running)
+		get_tree().quit()
+		return
+	if "--pulse-capture" in OS.get_cmdline_user_args():
+		pulse_lab._run()
+		while not pulse_lab.study.done:
+			await get_tree().process_frame
+		pulse_lab._replay()
+		while pulse_lab.model.time < 4.5:
+			await get_tree().process_frame
+		pulse_lab.playing = false
+		await RenderingServer.frame_post_draw
+		get_viewport().get_texture().get_image().save_png("user://pulse-preview.png")
+		if "--preview-log" in OS.get_cmdline_user_args():
+			# Optional compact CI preview when artifact storage is unavailable.
+			var preview := get_viewport().get_texture().get_image()
+			preview.resize(1100, roundi(preview.get_height() * 1100.0 / preview.get_width()))
+			var encoded := Marshalls.raw_to_base64(preview.save_jpg_to_buffer(0.8))
+			for offset in range(0, encoded.length(), 1024):
+				print("PULSE_PREVIEW_CHUNK: ", encoded.substr(offset, 1024))
+		print("PULSE CAPTURE PASS: ", ProjectSettings.globalize_path("user://pulse-preview.png"))
+		get_tree().quit()
+		return
 	# Automated run/capture uses the same native game scene and solver.
 	for arg in OS.get_cmdline_user_args():
 		if arg.begins_with("--preset="):
@@ -125,6 +155,7 @@ func _build_ui() -> void:
 	brand.add_child(label("PHOTONIC  /  playground", 26))
 	brand.add_child(label("A little table for big wave ideas.", 13, MUTED))
 	spacer(header)
+	header.add_child(button("Pulse lab", _open_pulse_lab, "Run pulse timing, spiking and cavity computation experiments"))
 	header.add_child(button("Save table", table_save, "Ctrl+S · Save layout to your Godot user-data folder"))
 	header.add_child(button("Load", func(): _replace(table_load), "Load your saved layout"))
 	header.add_child(button("Export readings", table_export, "Detector CSV and layout/measurement JSON"))
@@ -384,6 +415,8 @@ func _notice(text: String) -> void:
 	status_until = Time.get_ticks_msec() + 6000
 
 func _process(delta: float) -> void:
+	if is_instance_valid(pulse_lab):
+		return
 	if not table:
 		return
 	refresh_clock += delta
@@ -403,6 +436,8 @@ func _process(delta: float) -> void:
 				status_label.text = "Target light level: %.4f  /  0.0100   %s" % [power, "— target illuminated!" if power >= 0.01 else "— try a new route"]
 
 func _input(event: InputEvent) -> void:
+	if is_instance_valid(pulse_lab):
+		return
 	if not event is InputEventKey or not event.pressed or event.echo:
 		return
 	var handled := true
@@ -455,3 +490,16 @@ func _smoke() -> void:
 	table.export_measurements()
 	print("SMOKE PASS: all presets, inspector, edits, undo/redo, layout IO, export")
 	get_tree().quit()
+
+func _open_pulse_lab() -> void:
+	if is_instance_valid(pulse_lab):
+		return
+	var was_running := table.running
+	table.running = false
+	table.process_mode = Node.PROCESS_MODE_DISABLED
+	pulse_lab = preload("res://scripts/pulse_lab.gd").new()
+	pulse_lab.closed.connect(func():
+		pulse_lab.queue_free()
+		table.process_mode = Node.PROCESS_MODE_INHERIT
+		table.running = was_running)
+	add_child(pulse_lab)
