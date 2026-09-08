@@ -26,7 +26,7 @@ func _draw() -> void:
 		draw_line(Vector2(x, rect.position.y), Vector2(x, rect.end.y), Color("233642"))
 		draw_string(font, Vector2(x - 5, size.y - 9), "%.1f" % (end * k / 4.0), HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color("8b9ea9"))
 	draw_string(font, Vector2(5, 14), "state" if is_pair else "power", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color("8b9ea9"))
-	draw_string(font, Vector2(size.x - 52, size.y - 9), "t / T₀", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color("8b9ea9"))
+	draw_string(font, Vector2(size.x - 50, 14), "t / T₀", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color("8b9ea9"))
 	draw_string(font, Vector2(3, 33), "%.2f" % hi, HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color("8b9ea9"))
 	var input: Array = pair.pulses if is_pair else pulses
 	for t in input:

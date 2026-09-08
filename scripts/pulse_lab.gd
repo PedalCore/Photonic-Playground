@@ -74,7 +74,7 @@ func _ready() -> void:
 	center.add_child(_label("A cavity that remembers", 20))
 	center.add_child(_paragraph("Eight damped wave modes. Six probes integrate local power, fire and recover. Rings mark recovery.", MUTED))
 	field = Field.new()
-	field.custom_minimum_size.y = 255
+	field.custom_minimum_size.y = 220
 	center.add_child(field)
 	center.add_child(_paragraph("Hue = field phase · brightness = intensity (fixed scale). False colour, not a spectrum.", MUTED, 12))
 	var transport := HBoxContainer.new()
@@ -86,12 +86,12 @@ func _ready() -> void:
 	transport.add_child(clock)
 	center.add_child(_label("Probe power & emitted spikes", 15))
 	trace = Plot.new()
-	trace.custom_minimum_size.y = 222
+	trace.custom_minimum_size.y = 200
 	center.add_child(trace)
 	center.add_child(_paragraph("White ticks: input pulses. Coloured lines: power at probes 1–6. Raster: their output spikes. Time is in fundamental periods T₀.", MUTED, 12))
 	center.add_child(_label("One neuron · change the pulse gap", 17))
 	pair_plot = Plot.new()
-	pair_plot.custom_minimum_size.y = 155
+	pair_plot.custom_minimum_size.y = 130
 	center.add_child(pair_plot)
 	pair_caption = _paragraph("", MUTED, 12)
 	center.add_child(pair_caption)
@@ -154,7 +154,7 @@ func _build_controls(parent: Control) -> void:
 	task_menu.item_selected.connect(func(index):
 		config.task = index
 		_refresh_task()
-		_changed())
+		_changed(true))
 	parent.add_child(task_menu)
 	controls.append(task_menu)
 	task_caption = _paragraph("", MUTED)
@@ -173,7 +173,7 @@ func _build_controls(parent: Control) -> void:
 		var key: String = spec[0]
 		settings[key] = _spin(parent, spec[1], spec[2], spec[3], spec[4], config[key], func(value):
 			config[key] = value
-			_changed())
+			_changed(key in ["seed", "jitter"]))
 	feedback_toggle = CheckButton.new()
 	feedback_toggle.text = "Show spike feedback"
 	feedback_toggle.toggled.connect(func(_on): _replay())
@@ -232,15 +232,15 @@ func _build_results(parent: Control) -> void:
 func _refresh_task() -> void:
 	pattern_menu.clear()
 	if int(config.task) == 0:
-		pattern_menu.add_item("A · short → middle → long")
-		pattern_menu.add_item("B · long → middle → short")
+		pattern_menu.add_item("A · nominal 1 → 2 → 3")
+		pattern_menu.add_item("B · nominal 3 → 2 → 1")
 		task_caption.text = "Four equal kicks. Same duration and interval multiset; only the order changes. Can the readout recover it?"
 	else:
 		for text in ["00 · short / short", "01 · short / long", "10 · long / short", "11 · long / long"]:
 			pattern_menu.add_item(text)
 		task_caption.text = "Four equal kicks. Are the first and last gaps the same category? The middle gap adjusts to keep the total duration fixed."
 
-func _changed() -> void:
+func _changed(regenerate: bool = false) -> void:
 	study = null
 	current_predictions.clear()
 	for labels in result_labels.values():
@@ -251,7 +251,10 @@ func _changed() -> void:
 	prediction.text = "Parameters changed. Run a new comparison to train matching readouts."
 	status.text = "Results cleared because the model or dataset changed."
 	_refresh_pair()
-	_new_example()
+	if regenerate or example_times.is_empty():
+		_new_example()
+	else:
+		_replay()
 
 func _refresh_pair() -> void:
 	if pair_plot == null:
@@ -417,8 +420,9 @@ func smoke() -> void:
 		await get_tree().process_frame
 	assert(study.results["Timing + products"].test_accuracy > 0.9)
 	assert(current_predictions.size() == Study.NAMES.size())
+	var previous_times := example_times.duplicate()
 	settings.tau.value = 2.0
-	assert(study == null and export_button.disabled)
+	assert(study == null and export_button.disabled and example_times == previous_times)
 	_run([40, 20, 40])
 	_cancel()
 	assert(study.cancelled and export_button.disabled and not run_button.disabled)

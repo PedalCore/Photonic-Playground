@@ -180,7 +180,7 @@ func snapshot() -> Dictionary:
 		"input_time_rule": "Commands round up to the next dt boundary (comparison tolerance 1e-9); timing baselines use commanded intervals.",
 		"counts": counts, "split_seed_offsets": [0, 104729, 209759],
 		"task": "Interval order 1-2-3 versus 3-2-1" if int(config.task) == 0 else "XOR of first and last interval categories (short/long)",
-		"labels": "0 = short-middle-long; 1 = long-middle-short" if int(config.task) == 0 else "0 = same category; 1 = different categories",
+		"labels": "0 = nominal 1-2-3; 1 = nominal 3-2-1" if int(config.task) == 0 else "0 = same category; 1 = different categories",
 		"detection": "Within-bin mean power; threshold nodes integrate power, reset and recover. Feedback is pump-supplied.",
 		"error": error, "complete": done and not cancelled and error.is_empty(),
 		"results": results.duplicate(true), "datasets": datasets.duplicate(true)}

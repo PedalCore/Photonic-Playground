@@ -29,7 +29,10 @@ a separate example seed, keeping the selected class. The frozen readouts predict
 from the *completed* sequence; displayed predictions are not online forecasts.
 
 Change decay, aspect ratio, threshold, recovery, feedback, jitter or dataset seed
-to invalidate the previous fit. **Run comparison** always evaluates passive and
+to invalidate the previous fit. Changes to dynamics preserve the displayed input
+sequence for direct comparison; changing task, jitter or seed draws a new one.
+At high jitter the nominal middle and long intervals can exchange length; labels
+refer to their nominal order. **Run comparison** always evaluates passive and
 feedback variants. The feedback checkbox only selects which one is displayed.
 Export saves parameters, exact commanded input times, features, labels, trained
 scaling/weights, held-out predictions, and the current example's partial or full
