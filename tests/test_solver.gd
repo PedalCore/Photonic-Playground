@@ -16,6 +16,10 @@ func _initialize() -> void:
 	var zero = Solver.new(48, 40)
 	zero.step(12)
 	check(zero.total_energy() == 0.0, "rest remains rest")
+	zero.emitting = false
+	zero.pulse()
+	zero.reset()
+	check(not zero.pulsing and zero.tick == 0, "reset cancels an in-flight pulse")
 	var src := Library.component("source", 24, 20, 0, 0)
 	src.band = 1
 	var one = Solver.new(48, 40)

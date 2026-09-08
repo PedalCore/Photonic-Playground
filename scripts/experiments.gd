@@ -47,4 +47,3 @@ static func layout(preset: int) -> Array:
 			objects = [source, component("mirror", 95, 74, 0, 70), goal,
 				component("mirror", 49, 26, -35, 24), component("mirror", 144, 28, 35, 24)]
 	return objects
-

@@ -98,7 +98,7 @@ See [the model notes](docs/model.md) for the update rule, assumptions and next s
 
 Simulation is CPU GDScript; only displaying the field uses a shader. The speed
 menu chooses 1, 3 or 6 fixed simulation steps per rendered frame. Lower it if the
-table feels sluggish. Simulation time is reported in **steps**, deliberately
+table feels sluggish; one step per frame is the default. Simulation time is reported in **steps**, deliberately
 independent of wall-clock time or frame rate. Faster GPUs alone will not speed up
 this first solver. A GPU solver is a possible next iteration after playtesting.
 
@@ -125,4 +125,3 @@ duplicate/delete, undo/redo, save/load and measurement export.
 
 The concept renders that inspired this project were visual studies. This repository
 contains the first runnable simulation, with a deliberately simpler 2D table.
-

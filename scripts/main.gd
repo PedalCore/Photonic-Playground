@@ -180,7 +180,7 @@ func _build_ui() -> void:
 	var speed_menu := OptionButton.new()
 	for item in ["1 step/frame", "3 steps/frame", "6 steps/frame"]:
 		speed_menu.add_item(item)
-	speed_menu.select(1)
+	speed_menu.select(0)
 	speed_menu.item_selected.connect(func(i: int): table.speed = [1, 3, 6][i])
 	transport.add_child(speed_menu)
 	guide_label = label(Library.NOTES[0], 13, MUTED)
@@ -370,7 +370,8 @@ func table_save() -> void:
 	table.save_layout()
 
 func table_load() -> void:
-	table.load_layout()
+	if not table.load_layout():
+		return
 	emission_button.set_pressed_no_signal(table.solver.emitting)
 	title_label.text = "SAVED TABLE  /  YOUR EXPERIMENT"
 	guide_label.text = "Your layout, restarted from rest. Change a component and see where the light goes."
@@ -448,7 +449,7 @@ func _smoke() -> void:
 	table.save_layout()
 	var saved: Dictionary = table.snapshot()
 	table.components.clear()
-	table.load_layout()
+	assert(table.load_layout())
 	assert(table.components.size() == saved.components.size())
 	assert(Table.validate_snapshot(table.snapshot()).is_empty())
 	table.export_measurements()

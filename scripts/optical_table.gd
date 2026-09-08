@@ -15,7 +15,7 @@ var components: Array = []
 var selected: int = -1
 var tool: String = "select"
 var running: bool = true
-var speed: int = 3
+var speed: int = 1
 var exposure: float = 2.3
 var view_mode: int = 0
 var preset: int = 0
@@ -310,8 +310,6 @@ func reset_waves() -> void:
 	solver.reset()
 	traces.clear()
 	last_sample = 0
-	if not solver.emitting:
-		solver.pulse()
 	update_textures()
 
 func snapshot() -> Dictionary:
@@ -354,19 +352,19 @@ func save_layout() -> void:
 	dirty = false
 	notice.emit("Saved optical_table.json in your Godot user-data folder.")
 
-func load_layout() -> void:
+func load_layout() -> bool:
 	if not FileAccess.file_exists("user://optical_table.json"):
 		notice.emit("No saved table yet. Use Save table first.")
-		return
+		return false
 	var file := FileAccess.open("user://optical_table.json", FileAccess.READ)
 	if file == null or file.get_length() > 262144:
 		notice.emit("Could not read layout, or file exceeds 256 KB.")
-		return
+		return false
 	var data: Variant = JSON.parse_string(file.get_as_text())
 	var error := validate_snapshot(data)
 	if not error.is_empty():
 		notice.emit(error)
-		return
+		return false
 	remember()
 	components = data.components.duplicate(true)
 	for c in components:
@@ -377,8 +375,10 @@ func load_layout() -> void:
 	solver.pulsing = false
 	selected = -1
 	apply_layout(true)
+	dirty = false
 	selection_changed.emit()
 	notice.emit("Table loaded. Waves restarted from rest.")
+	return true
 
 func export_measurements() -> void:
 	var stem := "user://measurement_%s" % Time.get_datetime_string_from_system().replace(":", "-")

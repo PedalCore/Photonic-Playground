@@ -42,6 +42,7 @@ func reset() -> void:
 	energy.fill(0.0)
 	tick = 0
 	pulse_start = 0
+	pulsing = false
 
 func pulse() -> void:
 	pulsing = true

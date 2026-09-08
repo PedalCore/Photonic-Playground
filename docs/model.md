@@ -65,4 +65,3 @@ cross-frequency interference, four-wave mixing or frequency conversion.
 - [Photonic reservoir wave dynamics](https://www.nature.com/articles/s41598-019-55247-y): inspiration for later memory/nonlinear experiments; not implemented here as a trained reservoir.
 - [Meep introduction](https://meep.readthedocs.io/en/latest/Introduction/): electromagnetic FDTD and a possible validation route. The current model is not Meep.
 - [Godot ImageTexture](https://docs.godotengine.org/en/4.4/classes/class_imagetexture.html): dynamic field textures.
-

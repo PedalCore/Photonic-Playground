@@ -46,6 +46,8 @@ jobs:
           mkdir -p preview
           cp "$HOME/.local/share/godot/app_userdata/Photonic Playground/preview.png" preview/prism-study.png
       - uses: actions/upload-artifact@v4
+        continue-on-error: true
         with:
           name: native-godot-preview
           path: preview/
+          retention-days: 1
