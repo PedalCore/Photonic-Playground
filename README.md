@@ -87,12 +87,25 @@ propagation speed; a simple band-dependent index produces dispersion.
 
 This is an exploratory game model, **not a Maxwell solver or a validated photonic
 device design tool**. There is no polarization, calibrated Fresnel response,
-continuous spectrum, nonlinear material, trained reservoir readout, or quantum
-state. Grid dispersion and staircase boundaries are visible approximations.
+continuous spectrum, nonlinear material, or quantum state. The table UI does
+not yet train a reservoir readout. Grid dispersion and staircase boundaries are visible approximations.
 Mirrors impose a zero-field boundary (with a phase inversion). A grating here is
 an array of reflective bars and openings, rather than a physical ruled glass optic.
 
 See [the model notes](docs/model.md) for the update rule, assumptions and next steps.
+
+## Can it compute?
+
+The optional [research experiments](research/README.md) now measure a two-input
+optical matrix and train an electronic readout on the solver's wave history.
+The first fixed open-cavity experiment reaches **97.8% mean held-out accuracy on
+delayed XOR**, across three bit-stream trials. An empty table reaches 93.6%; a
+simple quadratic digital control reaches 100%. These are ideal scalar-model
+results, not hardware performance claims.
+
+The experiments include separate train/validation/test streams, direct native
+checks, controls and a reproducible results figure. They run from the command
+line with Godot plus Python; readout training is not yet exposed in the table UI.
 
 ## Performance
 

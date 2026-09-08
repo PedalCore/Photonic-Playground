@@ -1,0 +1,529 @@
+{
+  "schema_version": 1,
+  "raw_sha256": "e0244be8cefcb64a985dc993aa3b66f937b22d64197f14250605a0d6d64314c7",
+  "godot_version": "4.4.1-stable (official)",
+  "model": "scalar-wave-v1",
+  "grid": [
+    64,
+    48
+  ],
+  "period_steps": 32,
+  "washout_symbols": 128,
+  "counts": {
+    "train": 1200,
+    "validation": 500,
+    "test": 1000
+  },
+  "trials": 3,
+  "noise": "none; ideal noiseless simulation",
+  "target": "input[n-2] XOR input[n-3], evaluated after symbol n",
+  "matrix": {
+    "real": [
+      [
+        -0.010777895899025662,
+        0.022537869827615305
+      ],
+      [
+        0.0031049824226362563,
+        0.011799010798889639
+      ],
+      [
+        0.01586654146454889,
+        -0.01571162265649165
+      ]
+    ],
+    "imaginary": [
+      [
+        -0.0021014312799926735,
+        -0.0025280809191501317
+      ],
+      [
+        0.022705950216535174,
+        0.021581433227854753
+      ],
+      [
+        0.008639136074322413,
+        -0.004153869367679373
+      ]
+    ],
+    "checks": [
+      {
+        "input": [
+          0.7,
+          -0.4
+        ],
+        "coherent_output_nrmse": 1.0605577802441843e-07,
+        "full_waveform_nrmse": 6.565215680848721e-07,
+        "incoherent_power_sum_nrmse": 0.7863398426045715
+      },
+      {
+        "input": [
+          -0.2,
+          0.9
+        ],
+        "coherent_output_nrmse": 1.1626060767878699e-07,
+        "full_waveform_nrmse": 8.100554447125852e-07,
+        "incoherent_power_sum_nrmse": 0.3357720512777547
+      },
+      {
+        "input": [
+          1.0,
+          1.0
+        ],
+        "coherent_output_nrmse": 1.255739643800729e-07,
+        "full_waveform_nrmse": 7.052528806423855e-07,
+        "incoherent_power_sum_nrmse": 0.5792659335392648
+      }
+    ],
+    "calibration": "fixed finite time window; not a steady-state scattering matrix"
+  },
+  "convolution_checks": {
+    "cavity": {
+      "direct_symbols": 192,
+      "direct_field_nrmse": 0.0002910140138524216,
+      "direct_intensity_nrmse": 3.1708933524282136e-05,
+      "last_16_symbols_energy_fraction": 3.1591814361974756e-07
+    },
+    "empty": {
+      "direct_symbols": 192,
+      "direct_field_nrmse": 0.0001884438626895842,
+      "direct_intensity_nrmse": 3.376262102956859e-05,
+      "last_16_symbols_energy_fraction": 1.5348848273503807e-07
+    }
+  },
+  "native_readout_check": {
+    "trial": 1,
+    "symbols_after_washout": 64,
+    "native_test_accuracy": 0.96875,
+    "class_agreement_with_convolution": 1.0,
+    "max_prediction_difference": 0.0002340219623153672
+  },
+  "accuracy": {
+    "linear input delays": {
+      "runs": [
+        0.525,
+        0.491,
+        0.507
+      ],
+      "mean": 0.5076666666666667,
+      "std_across_three_runs": 0.017009801096230782
+    },
+    "quadratic input delays": {
+      "runs": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "mean": 1.0,
+      "std_across_three_runs": 0.0
+    },
+    "current input only": {
+      "runs": [
+        0.495,
+        0.515,
+        0.507
+      ],
+      "mean": 0.5056666666666666,
+      "std_across_three_runs": 0.010066445913694343
+    },
+    "cavity: intensity": {
+      "runs": [
+        0.981,
+        0.975,
+        0.977
+      ],
+      "mean": 0.9776666666666666,
+      "std_across_three_runs": 0.003055050463303896
+    },
+    "cavity: linear field": {
+      "runs": [
+        0.521,
+        0.494,
+        0.283
+      ],
+      "mean": 0.4326666666666667,
+      "std_across_three_runs": 0.1303162819195412
+    },
+    "empty: intensity": {
+      "runs": [
+        0.939,
+        0.937,
+        0.932
+      ],
+      "mean": 0.9359999999999999,
+      "std_across_three_runs": 0.003605551275463946
+    },
+    "empty: linear field": {
+      "runs": [
+        0.521,
+        0.5,
+        0.314
+      ],
+      "mean": 0.445,
+      "std_across_three_runs": 0.11393419153177857
+    },
+    "cavity: three-bit parity": {
+      "runs": [
+        0.475,
+        0.497,
+        0.489
+      ],
+      "mean": 0.48699999999999993,
+      "std_across_three_runs": 0.011135528725660053
+    }
+  },
+  "trial_details": [
+    {
+      "seeds": [
+        1729,
+        3253,
+        7919
+      ],
+      "readouts": {
+        "linear input delays": {
+          "test_accuracy": 0.525,
+          "lambda": 0.1,
+          "feature_count": 16
+        },
+        "quadratic input delays": {
+          "test_accuracy": 1.0,
+          "lambda": 1e-08,
+          "feature_count": 17
+        },
+        "current input only": {
+          "test_accuracy": 0.495,
+          "lambda": 10.0,
+          "feature_count": 1
+        },
+        "cavity: intensity": {
+          "test_accuracy": 0.981,
+          "lambda": 0.01,
+          "feature_count": 24
+        },
+        "cavity: linear field": {
+          "test_accuracy": 0.521,
+          "lambda": 0.1,
+          "feature_count": 48
+        },
+        "empty: intensity": {
+          "test_accuracy": 0.939,
+          "lambda": 1e-08,
+          "feature_count": 24
+        },
+        "empty: linear field": {
+          "test_accuracy": 0.521,
+          "lambda": 0.0001,
+          "feature_count": 48
+        }
+      },
+      "three_bit_parity": {
+        "test_accuracy": 0.475,
+        "lambda": 10.0
+      }
+    },
+    {
+      "seeds": [
+        11729,
+        13253,
+        17919
+      ],
+      "readouts": {
+        "linear input delays": {
+          "test_accuracy": 0.491,
+          "lambda": 0.1,
+          "feature_count": 16
+        },
+        "quadratic input delays": {
+          "test_accuracy": 1.0,
+          "lambda": 1e-08,
+          "feature_count": 17
+        },
+        "current input only": {
+          "test_accuracy": 0.515,
+          "lambda": 10.0,
+          "feature_count": 1
+        },
+        "cavity: intensity": {
+          "test_accuracy": 0.975,
+          "lambda": 0.01,
+          "feature_count": 24
+        },
+        "cavity: linear field": {
+          "test_accuracy": 0.494,
+          "lambda": 0.1,
+          "feature_count": 48
+        },
+        "empty: intensity": {
+          "test_accuracy": 0.937,
+          "lambda": 0.0001,
+          "feature_count": 24
+        },
+        "empty: linear field": {
+          "test_accuracy": 0.5,
+          "lambda": 0.0001,
+          "feature_count": 48
+        }
+      },
+      "three_bit_parity": {
+        "test_accuracy": 0.497,
+        "lambda": 10.0
+      }
+    },
+    {
+      "seeds": [
+        21729,
+        23253,
+        27919
+      ],
+      "readouts": {
+        "linear input delays": {
+          "test_accuracy": 0.507,
+          "lambda": 10.0,
+          "feature_count": 16
+        },
+        "quadratic input delays": {
+          "test_accuracy": 1.0,
+          "lambda": 1e-08,
+          "feature_count": 17
+        },
+        "current input only": {
+          "test_accuracy": 0.507,
+          "lambda": 1e-08,
+          "feature_count": 1
+        },
+        "cavity: intensity": {
+          "test_accuracy": 0.977,
+          "lambda": 1e-08,
+          "feature_count": 24
+        },
+        "cavity: linear field": {
+          "test_accuracy": 0.283,
+          "lambda": 10.0,
+          "feature_count": 48
+        },
+        "empty: intensity": {
+          "test_accuracy": 0.932,
+          "lambda": 9.999999999999999e-06,
+          "feature_count": 24
+        },
+        "empty: linear field": {
+          "test_accuracy": 0.314,
+          "lambda": 10.0,
+          "feature_count": 48
+        }
+      },
+      "three_bit_parity": {
+        "test_accuracy": 0.489,
+        "lambda": 10.0
+      }
+    }
+  ],
+  "first_test_trace": {
+    "target": [
+      0,
+      1,
+      0,
+      1,
+      0,
+      1,
+      1,
+      0,
+      1,
+      1,
+      0,
+      0,
+      0,
+      0,
+      1,
+      1,
+      0,
+      0,
+      1,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      1,
+      1,
+      1,
+      0,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      1,
+      0,
+      1,
+      0,
+      1,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      1,
+      0,
+      1,
+      0,
+      1,
+      0,
+      0
+    ],
+    "prediction": [
+      0.09298546560228133,
+      0.8121427754508233,
+      0.38900476197503087,
+      0.5409817315227223,
+      0.35316318063160346,
+      1.071232497988446,
+      1.2916085429257769,
+      0.12213456720364357,
+      0.959839769934508,
+      0.7551054614870831,
+      0.032796804485868525,
+      0.17755779118025744,
+      0.06927216012669435,
+      0.18655520765236738,
+      0.4532053843623507,
+      0.6365339560306202,
+      0.22114739607161127,
+      0.11564199620920113,
+      1.0171415413974216,
+      0.6994298059559044,
+      0.14629593937719854,
+      0.2087559479213914,
+      0.13126465635925733,
+      0.16549417764162666,
+      0.1380619815669008,
+      0.12235814274863521,
+      0.13948452011990153,
+      0.19591960616205806,
+      1.0033354433077055,
+      -0.11516168106575508,
+      0.7741291223908742,
+      0.9535348367598108,
+      0.79655845893445,
+      -0.020783521083289402,
+      0.8983122230302422,
+      0.9428309105110977,
+      0.9645808230464131,
+      0.7853324289881061,
+      0.05775141534984002,
+      0.1056384471916107,
+      0.4236214433507859,
+      0.44791983060040497,
+      0.5971076016708513,
+      0.16194551876131902,
+      1.2090938617102753,
+      0.14063235275498165,
+      0.7819822587444973,
+      0.37461144801319857,
+      0.2311489458723474,
+      0.4581076732405004,
+      0.7955063304710543,
+      0.7988339291059559,
+      0.8998132997517015,
+      0.8406704398318898,
+      0.7854078713743629,
+      0.5217971411671399,
+      0.0849708871289796,
+      1.0439354122882758,
+      -0.2245036700505172,
+      1.1205552185523433,
+      0.2892751897510487,
+      0.6735863663012147,
+      0.48535991382530486,
+      0.08160795875001126
+    ],
+    "input": [
+      1,
+      0,
+      0,
+      1,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      1,
+      0,
+      1,
+      0,
+      0,
+      1,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1,
+      1,
+      0,
+      0,
+      1,
+      1,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      1,
+      0,
+      1,
+      0,
+      0,
+      1,
+      1,
+      0,
+      0,
+      1,
+      1,
+      1,
+      0,
+      1
+    ]
+  },
+  "limits": [
+    "Scalar toy model, not calibrated Maxwell physics or hardware evidence.",
+    "Train/validation/test sequences use linear convolution of a measured Godot impulse response; a separate direct Godot sequence validates that shortcut.",
+    "No detector EWMA, optical material nonlinearity, noise, fabrication errors, or hardware energy/speed measurement.",
+    "Three independent input-stream trials; one preselected geometry and timing, no geometry optimization.",
+    "XOR shows a primitive, not an advantage over software; the quadratic electronic baseline contains the required product explicitly.",
+    "Fixed finite-window matrix calibration demonstrates an existing map, not programming an arbitrary requested matrix."
+  ]
+}

@@ -62,6 +62,6 @@ cross-frequency interference, four-wave mixing or frequency conversion.
 
 - [Programmable photonic processor](https://www.nature.com/articles/s41467-024-45888-7): interference along programmable optical paths.
 - [Diffractive optical computing](https://arxiv.org/abs/1804.08711): passive diffractive layers designed for optical transformations.
-- [Photonic reservoir wave dynamics](https://www.nature.com/articles/s41598-019-55247-y): inspiration for later memory/nonlinear experiments; not implemented here as a trained reservoir.
+- [Photonic reservoir wave dynamics](https://www.nature.com/articles/s41598-019-55247-y): inspiration for nonlinear cavity models. Our [research bench](../research/README.md) now trains an electronic readout of the passive scalar wave history; it does not implement this paper's nonlinear gain medium.
 - [Meep introduction](https://meep.readthedocs.io/en/latest/Introduction/): electromagnetic FDTD and a possible validation route. The current model is not Meep.
 - [Godot ImageTexture](https://docs.godotengine.org/en/4.4/classes/class_imagetexture.html): dynamic field textures.

@@ -98,7 +98,7 @@ func configure(components: Array) -> void:
 					seen[idx] = true
 					samples.append(idx)
 					weights.append(1.0 if half <= 1 else 0.5 + 0.5 * cos(PI * float(a) / (half + 1)))
-			sources.append({"component": component.duplicate(true), "samples": samples, "weights": weights})
+			sources.append({"component": component.duplicate(true), "samples": samples, "weights": weights, "gain": 1.0})
 			continue
 		if component.kind == "detector":
 			continue
@@ -134,6 +134,14 @@ func configure(components: Array) -> void:
 				previous[i * 3 + b] = 0.0
 				energy[i * 3 + b] = 0.0
 
+func set_source_amplitude(source_index: int, gain: float) -> bool:
+	## Runtime field-amplitude modulation for experiments; negative means phase + PI.
+	## configure() restores unit gains; reset() clears waves but preserves the drive.
+	if source_index < 0 or source_index >= sources.size() or not is_finite(gain):
+		return false
+	sources[source_index].gain = gain
+	return true
+
 func step(count: int = 1) -> void:
 	var stride := width * 3
 	for iteration in range(count):
@@ -162,7 +170,7 @@ func step(count: int = 1) -> void:
 					if comp.band != 3 and comp.band != b:
 						continue
 					var omega: float = TAU * SPEED / (BASE_WAVELENGTHS[b] * comp.wavelength)
-					var value: float = 0.07 * envelope * sin(omega * tick + deg_to_rad(comp.phase))
+					var value: float = 0.07 * src.gain * envelope * sin(omega * tick + deg_to_rad(comp.phase))
 					for k in range(src.samples.size()):
 						var cell: int = src.samples[k]
 						if walls[cell] == 0:

@@ -2,3 +2,6 @@
 builds/
 *.tmp
 *.log
+.venv/
+research/raw*.json
+research/__pycache__/
